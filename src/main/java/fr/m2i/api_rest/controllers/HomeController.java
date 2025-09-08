@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
 	@GetMapping
-	public String returnHello() {
+	public String getHello() {
 		return "Hello";
 	}
 	
 	@GetMapping("/admin")
-	public String returnAdmin() {
+	public String hetHelloAdmin() {
 		return "Hello Admin";
 	}
 
