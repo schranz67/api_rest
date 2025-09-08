@@ -46,3 +46,15 @@ jobs:
         compression-level: 6             # (0 à 9) 6 = bon compromis
         overwrite: true 
 
+
+    - name: JaCoCo Report
+      uses: Madrapps/jacoco-report@v1.7.2
+      with:
+        paths: target/jacoco.xml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        min-coverage-overall: 80
+        min-coverage-changed-files: 80
+        title: "Rapport JaCoCo"
+        update-comment: true
+          
+
