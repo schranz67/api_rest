@@ -38,7 +38,9 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         fi
   build:                            # Job de build
     runs-on: ubuntu-latest             # Ce job s'exécute sur une machine virtuelle Ubuntu qui sera conteneurisé.
-    needs: test                        # AJOUT : D'abord le test et après le build : Ce job ne s'exécute que si le job test réussit.
+    needs: 
+      - test                           # AJOUT : D'abord le test et après le build : Ce job ne s'exécute que si le job test réussit.
+      - sonarQube
     steps:                             # Les étapes sont les suivantes :
     - uses: actions/checkout@v4        # Récupération du code source du repository
     - name: Set up JDK 21              # Configuration du JDK 21 par installation de Java21 et activation du cache Maven
@@ -61,7 +63,7 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         name: build-artifact             # Nom visible dans GitHub
         path: target/*.jar               # Où se trouve le JAR
 
-  SonarQube:
+  sonarQube:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
