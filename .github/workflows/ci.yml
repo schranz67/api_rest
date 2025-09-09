@@ -38,7 +38,9 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         fi
   build:                            # Job de build
     runs-on: ubuntu-latest             # Ce job s'exécute sur une machine virtuelle Ubuntu qui sera conteneurisé.
-    needs: test                        # AJOUT : D'abord le test et après le build : Ce job ne s'exécute que si le job test réussit.
+    needs: 
+      - test                           # AJOUT : D'abord le test et après le build : Ce job ne s'exécute que si le job test réussit.
+      - sonarQube
     steps:                             # Les étapes sont les suivantes :
     - uses: actions/checkout@v4        # Récupération du code source du repository
     - name: Set up JDK 21              # Configuration du JDK 21 par installation de Java21 et activation du cache Maven
@@ -61,6 +63,33 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         name: build-artifact             # Nom visible dans GitHub
         path: target/*.jar               # Où se trouve le JAR
 
-
+  sonarQube:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+           java-version: '21'
+           distribution: 'temurin'
+           cache: maven
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=schranz67_api_rest
         
 
