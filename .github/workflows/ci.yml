@@ -93,7 +93,7 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=schranz67_api_rest   
 
   dockerPush:
-    runs-on: ubuntu-latestµ    
+    runs-on: ubuntu-latest    
     needs: build
     steps:
       - uses: actions/checkout@v4
