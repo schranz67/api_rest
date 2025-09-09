@@ -93,7 +93,8 @@ jobs:                                  # Un pipeline est un esnemble de jobs
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=schranz67_api_rest   
 
   dockerPush:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latestµ    
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 21
@@ -119,6 +120,6 @@ jobs:                                  # Un pipeline est un esnemble de jobs
           # Push is a shorthand for --output=type=registry
           push: true
           # List of tags
-          tags: ${{ secrets.DOCKER_USERNAME }}/mon-image:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/api_rest:latest
 
                 
