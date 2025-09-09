@@ -3,18 +3,18 @@
 
 name: Java CI with Maven
 
-on:                                    # Le workflow se déclenche
+on:                                    # Le workflow se déclenche...
   push:                                  # lors d’un push sur la branche main           
     branches: [ "main" ]        
   pull_request:                          # lors d’un pull request vers main (fusion acceptée ou non par un tech lead)
     branches: [ "main" ]
   workflow_dispatch:                     # AJOUT : manuellement via l’interface GitHub
 
-jobs:
-  test:                                # AJOUT : Ce job s'exécute sur une machine virtuelle Ubuntu.
-    runs-on: ubuntu-latest
+jobs:                                  # Un pipeline est un esnemble de jobs
+  test:                                # AJOUT : Ce job s'exécute sur une machine virtuelle Ubuntu qui sera conteneurisé.
+    runs-on: ubuntu-latest             # Ce job s'exécute sur une machine virtuelle Ubuntu.
     steps:                             # Les étapes sont les suivantes :
-     - uses: actions/checkout@v4        # Récupération du code source du repository
+     - uses: actions/checkout@v4        # Récupération du code source du repository et placement dans le conteneur
      - name: Set up JDK 21              # Configuration du JDK 21 par installation de Java21 et activation du cache Maven
        uses: actions/setup-java@v4
        with:
@@ -37,7 +37,7 @@ jobs:
           git push
         fi
   build:                            # Job de build
-    runs-on: ubuntu-latest             Ce job s'exécute sur une machine virtuelle Ubuntu.
+    runs-on: ubuntu-latest             # Ce job s'exécute sur une machine virtuelle Ubuntu qui sera conteneurisé.
     needs: test                        # AJOUT : D'abord le test et après le build : Ce job ne s'exécute que si le job test réussit.
     steps:                             # Les étapes sont les suivantes :
     - uses: actions/checkout@v4        # Récupération du code source du repository
@@ -48,7 +48,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package -DskipTests --file pom.xml      #AJOUT de -DskipTests : Build avec Maven sans les tests
+      run: mvn -B package -DskipTests --file pom.xml      #AJOUT de -DskipTests : Build avec Maven pour générer le JAR sans les tests
   
   
   # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
